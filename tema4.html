@@ -345,14 +345,41 @@
             gap: 0.5rem;
         }
 
-        /* Stats Box */
+        /* MODIFICADO: Stats Box con mejor contraste */
         .stats-box {
-            background: var(--gradient);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
             border-radius: 15px;
             padding: 2rem;
             margin: 2rem 0;
             animation: fadeInUp 0.8s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);
+        }
+
+        .stats-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .stats-box h3 {
+            color: #fbbf24; /* Color amarillo brillante para mejor contraste */
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 2;
         }
 
         .stats-grid {
@@ -360,10 +387,22 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
+            position: relative;
+            z-index: 2;
         }
 
         .stat-item {
             text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
         }
 
         .stat-value {
@@ -371,11 +410,13 @@
             font-weight: bold;
             margin-bottom: 0.5rem;
             animation: pulse 2s ease-in-out infinite;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         /* Image Placeholder */
@@ -458,6 +499,10 @@
             .process-step::after {
                 display: none;
             }
+
+            .stats-box h3 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -518,8 +563,9 @@
         <h2>¿Qué es la Automatización de Procesos Empresariales?</h2>
         <p>La automatización de procesos empresariales es el uso de tecnología para ejecutar procesos de negocio recurrentes, manuales o basados en reglas, con mínima intervención humana. Va más allá de la simple automatización de tareas, abarcando la optimización completa de flujos de trabajo end-to-end.</p>
 
+        <!-- MODIFICADO: Stats Box con mejor visibilidad -->
         <div class="stats-box">
-            <h3>Impacto de la Automatización Empresarial</h3>
+            <h3><i class="fas fa-chart-line"></i> Impacto de la Automatización Empresarial</h3>
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-value">73%</div>
