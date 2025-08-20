@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas de Automatización - Blog AutoDigital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.8;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            background: var(--gradient);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .article-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .article-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            animation: fadeInUp 1s ease 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.9;
+        }
+
+        /* Article Content */
+        .article-body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            background: var(--bg-white);
+            border-radius: 20px;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .article-body h2 {
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            color: var(--primary-color);
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .article-body h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 0.8rem;
+            color: var(--secondary-color);
+        }
+
+        .article-body p {
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.5rem 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        /* Tool Cards */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tool-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .tool-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+
+        /* Feature Box */
+        .feature-box {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--accent-color);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .feature-box h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: var(--gradient);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .rating {
+            color: var(--accent-color);
+        }
+
+        /* Image Placeholder */
+        .image-placeholder {
+            width: 100%;
+            height: 300px;
+            background: var(--gradient);
+            border-radius: 15px;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            animation: fadeInUp 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-placeholder::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        /* Back Button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .article-header h1 {
+                font-size: 2rem;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>AutoDigital</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="tema1.html">¿Qué es?</a></li>
+                <li><a href="tema2.html">Herramientas</a></li>
+                <li><a href="tema3.html">Marketing</a></li>
+                <li><a href="tema4.html">Procesos</a></li>
+                <li><a href="tema5.html">Futuro</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Article Header -->
+    <header class="article-header">
+        <div class="article-content">
+            <h1>Herramientas de Automatización</h1>
+            <div class="article-meta">
+                <div class="meta-item">
+                    <i class="fas fa-user"></i>
+                    <span>AutoDigital Team</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>18 de Enero, 2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>10 min de lectura</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Volver al inicio
+    </a>
+
+    <!-- Article Content -->
+    <main class="article-body">
+        <p>En el mundo actual de la automatización digital, contar con las herramientas adecuadas es fundamental para optimizar procesos, aumentar la productividad y mantenerse competitivo. En este artículo, exploraremos las principales herramientas de automatización que están transformando la forma en que trabajamos.</p>
+
+        <div class="image-placeholder">
+            <i class="fas fa-tools fa-3x"></i>
+        </div>
+
+        <h2>Categorías de Herramientas de Automatización</h2>
+        <p>Las herramientas de automatización se pueden clasificar en varias categorías según su función y ámbito de aplicación. Conocer estas categorías nos ayudará a seleccionar la herramienta adecuada para cada necesidad específica.</p>
+
+        <h3>1. Automatización de Procesos Robótica (RPA)</h3>
+        <p>La RPA permite automatizar tareas repetitivas basadas en reglas, imitando las acciones humanas en interfaces de usuario. Estas herramientas son ideales para procesos estructurados y predecibles.</p>
+
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h4>UiPath</h4>
+                <p>Líder en RPA con una plataforma completa para automatizar procesos empresariales a gran escala.</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h4>Automation Anywhere</h4>
+                <p>Plataforma RPA en la nube que combina automatización tradicional con IA avanzada.</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h4>Blue Prism</h4>
+                <p>Solución RPA empresarial enfocada en seguridad y gobernanza de procesos automatizados.</p>
+            </div>
+        </div>
+
+        <h3>2. Automatización de Flujos de Trabajo</h3>
+        <p>Estas herramientas permiten conectar diferentes aplicaciones y servicios para crear flujos de trabajo automatizados sin necesidad de programación.</p>
+
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <h4>Zapier</h4>
+                <p>Conecta más de 5,000 aplicaciones para automatizar flujos de trabajo de manera sencilla.</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h4>Microsoft Power Automate</h4>
+                <p>Integrado con el ecosistema Microsoft, permite automatizar tareas entre aplicaciones y servicios.</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <h4>Integromat (Make)</h4>
+                <p>Plataforma visual para crear escenarios de automatización complejos entre múltiples servicios.</p>
+            </div>
+        </div>
+
+        <h3>3. Automatización de Marketing</h3>
+        <p>Especializadas en automatizar campañas de marketing, gestión de leads y análisis de resultados.</p>
+
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h4>HubSpot</h4>
+                <p>Plataforma completa de inbound marketing con potentes capacidades de automatización.</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <h4>Mailchimp</h4>
+                <p>Popular para automatización de email marketing y campañas multicanal.</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4>Marketo</h4>
+                <p>Solución empresarial para automatización de marketing B2B y gestión de leads.</p>
+            </div>
+        </div>
+
+        <div class="feature-box">
+            <h3><i class="fas fa-star"></i> Características Clave a Considerar</h3>
+            <p>Al seleccionar una herramienta de automatización, es importante evaluar:</p>
+            <ul>
+                <li><strong>Facilidad de uso:</strong> ¿Requiere conocimientos técnicos avanzados?</li>
+                <li><strong>Integraciones:</strong> ¿Se conecta con las aplicaciones que ya usas?</li>
+                <li><strong>Escalabilidad:</strong> ¿Puede crecer con tus necesidades?</li>
+                <li><strong>Seguridad:</strong> ¿Cumple con los estándares de seguridad requeridos?</li>
+                <li><strong>Soporte:</strong> ¿Ofrece documentación y ayuda técnica adecuada?</li>
+            </ul>
+        </div>
+
+        <h2>Comparación de Herramientas Populares</h2>
+        <p>A continuación, presentamos una comparación de algunas de las herramientas más populares en diferentes categorías:</p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Herramienta</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Facilidad de Uso</th>
+                    <th>Integraciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Zapier</strong></td>
+                    <td>Flujos de Trabajo</td>
+                    <td>Gratis - $599/mes</td>
+                    <td><span class="rating">★★★★★</span></td>
+                    <td>5000+</td>
+                </tr>
+                <tr>
+                    <td><strong>UiPath</strong></td>
+                    <td>RPA</td>
+                    <td>Personalizado</td>
+                    <td><span class="rating">★★★☆☆</span></td>
+                    <td>100+</td>
+                </tr>
+                <tr>
+                    <td><strong>HubSpot</strong></td>
+                    <td>Marketing</td>
+                    <td>Gratis - $3200/mes</td>
+                    <td><span class="rating">★★★★☆</span></td>
+                    <td>500+</td>
+                </tr>
+                <tr>
+                    <td><strong>Power Automate</strong></td>
+                    <td>Flujos de Trabajo</td>
+                    <td>Incluido en Office 365</td>
+                    <td><span class="rating">★★★★☆</span></td>
+                    <td>400+</td>
+                </tr>
+                <tr>
+                    <td><strong>Make (Integromat)</strong></td>
+                    <td>Flujos de Trabajo</td>
+                    <td>Gratis - $999/mes</td>
+                    <td><span class="rating">★★★★☆</span></td>
+                    <td>1000+</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="image-placeholder">
+            <i class="fas fa-code fa-3x"></i>
+        </div>
+
+        <h2>Herramientas de Automatización para Desarrolladores</h2>
+        <p>Para aquellos con conocimientos técnicos, existen herramientas más avanzadas que ofrecen mayor flexibilidad y control:</p>
+
+        <h3>1. Plataformas de Automatización de Código Bajo/Bajo Código</h3>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <h4>Airflow</h4>
+                <p>Plataforma de programación de flujos de trabajo creada por Airbnb, ideal para pipelines de datos.</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-terminal"></i>
+                </div>
+                <h4>Jenkins</h4>
+                <p>Servidor de automatización para integración continua y entrega continua (CI/CD).</p>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h4>Kestra</h4>
+                <p>Plataforma de orquestación de flujos de trabajo declarativa y código abierto.</p>
+            </div>
+        </div>
+
+        <h3>2. Herramientas de Automatización mediante Scripts</h3>
+        <p>Los desarrolladores pueden crear soluciones personalizadas utilizando:</p>
+        <ul>
+            <li><strong>Python:</strong> Con librerías como Selenium, BeautifulSoup, Pandas</li>
+            <li><strong>JavaScript:</strong> Con Node.js, Puppeteer, Playwright</li>
+            <li><strong>PowerShell:</strong> Para automatización en entornos Windows</li>
+            <li><strong>Bash/Shell:</strong> Para automatización en sistemas Unix/Linux</li>
+        </ul>
+
+        <h2>Tendencias Emergentes en Herramientas de Automatización</h2>
+        <p>El mercado de herramientas de automatización está evolucionando rápidamente. Estas son algunas de las tendencias más importantes:</p>
+
+        <h3>1. Automatización Inteligente</h3>
+        <p>La integración de IA y machine learning está permitiendo que las herramientas de automatización sean más inteligentes y adaptables. Ejemplos incluyen:</p>
+        <ul>
+            <li>Procesamiento de lenguaje natural para entender documentos no estructurados</li>
+            <li>Visión por computadora para automatizar tareas visuales</li>
+            <li>Aprendizaje automático para optimizar flujos de trabajo automáticamente</li>
+        </ul>
+
+        <h3>2. Automatización Híper-Automatizada</h3>
+        <p>Combinación de múltiples tecnologías (RPA, IA, Process Mining) para automatizar procesos de extremo a extremo de manera integral.</p>
+
+        <h3>3. Automatización Ciudadana</h3>
+        <p>Herramientas cada vez más accesibles que permiten a usuarios sin conocimientos técnicos crear sus propias automatizaciones.</p>
+
+        <div class="feature-box">
+            <h3><i class="fas fa-lightbulb"></i> Consejo Práctico</h3>
+            <p>Antes de invertir en una herramienta de automatización, realiza un análisis de tus procesos actuales. Identifica las tareas más repetitivas, las que consumen más tiempo y aquellas con mayor tasa de error. Esto te ayudará a priorizar qué automatizar primero y qué herramienta se adapta mejor a tus necesidades.</p>
+        </div>
+
+        <h2>Cómo Elegir la Herramienta Adecuada</h2>
+        <p>Seleccionar la herramienta de automatización correcta requiere considerar varios factores:</p>
+
+        <h3>1. Evalúa tus Necesidades</h3>
+        <ul>
+            <li>¿Qué procesos quieres automatizar?</li>
+            <li>¿Cuál es el volumen de tareas?</li>
+            <li>¿Qué nivel de complejidad tienen?</li>
+            <li>¿Qué aplicaciones necesitas integrar?</li>
+        </ul>
+
+        <h3>2. Considera tu Equipo</h3>
+        <ul>
+            <li>¿Tienes personal técnico disponible?</li>
+            <li>¿Cuál es el nivel de experiencia del equipo?</li>
+            <li>¿Cuánto tiempo pueden dedicar al aprendizaje?</li>
+        </ul>
+
+        <h3>3. Analiza el Retorno de Inversión</h3>
+        <ul>
+            <li>Costo de la herramienta vs. ahorros esperados</li>
+            <li>Tiempo de implementación</li>
+            <li>Mantenimiento y actualizaciones requeridas</li>
+        </ul>
+
+        <h3>4. Prueba Antes de Comprar</h3>
+        <p>La mayoría de las herramientas ofrecen versiones de prueba o planes gratuitos. Aprovecha estas opciones para evaluar:</p>
+        <ul>
+            <li>Facilidad de uso real</li>
+            <li>Calidad de la documentación</li>
+            <li>Soporte técnico disponible</li>
+            <li>Comunidad de usuarios activa</li>
+        </ul>
+
+        <div class="image-placeholder">
+            <i class="fas fa-chart-pie fa-3x"></i>
+        </div>
+
+        <h2>Conclusión</h2>
+        <p>Las herramientas de automatización digital son componentes esenciales en el ecosistema tecnológico actual. Desde soluciones sencillas para usuarios no técnicos hasta plataformas empresariales complejas, existe una herramienta para cada necesidad y presupuesto.</p>
+
+        <p>La clave del éxito no está solo en seleccionar la herramienta más potente, sino en encontrar aquella que mejor se adapte a tus procesos específicos, al nivel técnico de tu equipo y a tus objetivos de negocio. Recuerda que la automatización es un viaje, no un destino, y que la elección de las herramientas adecuadas es solo el primer paso hacia una transformación digital exitosa.</p>
+
+        <p>A medida que la tecnología continúa evolucionando, veremos herramientas cada vez más inteligentes, accesibles y especializadas. Mantente informado sobre las nuevas tendencias y no temas experimentar con diferentes soluciones hasta encontrar la combinación perfecta para tus necesidades de automatización.</p>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Blog de Automatización Digital. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const header = document.querySelector('header');
+            
+            if (currentScroll > 100) {
+                header.style.background = 'rgba(99, 102, 241, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = 'var(--gradient)';
+                header.style.backdropFilter = 'none';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0) translateX(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('h2, h3, p, ul, .tool-card, .feature-box, .comparison-table, .image-placeholder').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
