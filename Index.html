@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Vuelves conmigo?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #c0405a;
+    --rose-light: #f7e6ea;
+    --rose-pale: #fdf0f3;
+    --cream: #fdf6ee;
+    --gold: #b8874a;
+    --gold-light: #f5e9d3;
+    --dark: #2a1a1f;
+    --muted: #8a6a72;
+    --white: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* ─── PETALS ─── */
+  .petals-container {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .petal {
+    position: absolute; top: -40px;
+    font-size: 1.4rem;
+    animation: fall linear infinite;
+    opacity: 0.7;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.8; }
+    50%  { transform: translateY(50vh) rotate(180deg) translateX(30px); opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); opacity: 0; }
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: radial-gradient(ellipse at 60% 40%, #fce4ec 0%, var(--cream) 70%);
+  }
+  .hero-tag {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 9vw, 6.5rem);
+    font-weight: 700; line-height: 1.1;
+    color: var(--dark);
+    opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--rose);
+    display: block;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem; font-weight: 300;
+    color: var(--muted); margin-top: 1.5rem;
+    max-width: 480px; line-height: 1.8;
+    opacity: 0; animation: fadeUp 0.9s 1s forwards;
+  }
+  .hero-heart {
+    font-size: 3.5rem; margin-top: 2.5rem;
+    animation: pulse 2s ease-in-out infinite;
+    opacity: 0; animation: fadeUp 0.8s 1.4s forwards, pulse 2s 2.2s ease-in-out infinite;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 2rem;
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); opacity: 0;
+    animation: fadeUp 1s 2s forwards, bounce 2s 3s ease-in-out infinite;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.15); }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(8px); }
+  }
+
+  /* ─── PROMISES ─── */
+  .promises {
+    position: relative; z-index: 1;
+    padding: 6rem 2rem;
+    background: var(--white);
+  }
+  .section-label {
+    text-align: center;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    text-align: center; color: var(--dark);
+    margin-bottom: 3.5rem;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem; max-width: 960px; margin: 0 auto;
+  }
+  .card {
+    background: var(--rose-pale);
+    border: 1px solid #f0c8d0;
+    border-radius: 20px;
+    padding: 2rem 1.75rem;
+    position: relative; overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0; transform: translateY(40px);
+  }
+  .card.visible {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(192,64,90,0.12);
+  }
+  .card-icon {
+    font-size: 2.2rem; margin-bottom: 1rem; display: block;
+  }
+  .card-number {
+    position: absolute; top: 1.25rem; right: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem; font-weight: 700;
+    color: #f5c5cf; line-height: 1; user-select: none;
+  }
+  .card-promise {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--rose); margin-bottom: 0.6rem;
+    line-height: 1.3;
+  }
+  .card-desc {
+    font-size: 0.92rem; font-weight: 300;
+    color: var(--muted); line-height: 1.7;
+  }
+
+  /* ─── LETTER ─── */
+  .letter-section {
+    position: relative; z-index: 1;
+    padding: 6rem 2rem;
+    background: linear-gradient(160deg, #fce4ec 0%, var(--cream) 60%);
+  }
+  .letter-wrap {
+    max-width: 680px; margin: 0 auto;
+    background: var(--white);
+    border-radius: 24px;
+    padding: 3.5rem 3rem;
+    box-shadow: 0 30px 80px rgba(192,64,90,0.1);
+    border-top: 4px solid var(--rose);
+    position: relative;
+  }
+  .letter-wrap::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem; line-height: 1;
+    color: var(--rose-light);
+    position: absolute; top: 1rem; left: 1.5rem;
+    font-style: italic;
+  }
+  .letter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-style: italic;
+    color: var(--rose); margin-bottom: 2rem;
+    text-align: center;
+  }
+  .letter-body {
+    font-size: 1.02rem; font-weight: 300;
+    line-height: 2; color: var(--dark);
+    position: relative; z-index: 1;
+  }
+  .letter-body p { margin-bottom: 1.2rem; }
+  .letter-sig {
+    margin-top: 2rem; text-align: right;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-style: italic;
+    color: var(--rose);
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    position: relative; z-index: 1;
+    padding: 6rem 2rem;
+    text-align: center;
+    background: var(--dark);
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '♥';
+    position: absolute; font-size: 40rem;
+    color: rgba(255,255,255,0.02);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    color: var(--white); line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .cta-title span { color: #f48fb1; font-style: italic; }
+  .cta-sub {
+    font-size: 1rem; font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 3rem; max-width: 460px;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.8;
+  }
+  .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    padding: 0.9rem 2.2rem;
+    border-radius: 50px; font-size: 0.95rem;
+    font-weight: 700; letter-spacing: 0.04em;
+    cursor: pointer; border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.25); }
+  .btn-yes {
+    background: var(--rose); color: var(--white);
+  }
+  .btn-yes:hover { background: #a8304a; }
+  .btn-no {
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 0.8rem; padding: 0.9rem 1.6rem;
+    position: relative;
+  }
+
+  /* ─── CONFETTI ─── */
+  #yes-msg {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(192,64,90,0.95);
+    z-index: 100; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; padding: 2rem;
+  }
+  #yes-msg.show { display: flex; }
+  #yes-msg h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    color: var(--white); line-height: 1.2;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.8s forwards;
+  }
+  #yes-msg p {
+    font-size: 1.2rem; color: rgba(255,255,255,0.85);
+    font-weight: 300; max-width: 500px; line-height: 1.8;
+    animation: fadeUp 0.8s 0.4s both;
+  }
+  #yes-msg .hearts {
+    font-size: 3rem; margin-top: 2rem;
+    animation: fadeUp 0.8s 0.7s both;
+  }
+  #yes-msg .close-btn {
+    margin-top: 2.5rem; background: var(--white);
+    color: var(--rose); padding: 0.8rem 2rem;
+    border-radius: 50px; cursor: pointer;
+    border: none; font-weight: 700;
+    animation: fadeUp 0.8s 1s both;
+  }
+
+  /* divider */
+  .divider {
+    text-align: center; padding: 1.5rem 0;
+    font-size: 1.2rem; color: var(--rose);
+    background: var(--white);
+  }
+
+  @media (max-width: 600px) {
+    .letter-wrap { padding: 2.5rem 1.5rem; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- petals -->
+<div class="petals-container" id="petals"></div>
+
+<!-- YES overlay -->
+<div id="yes-msg">
+  <h2>¡Lo sabía! 🌹</h2>
+  <p>Juntos somos mejor versión de nosotros mismos. Te prometo que esta vez será diferente, con amor, paciencia y mucha dedicación.</p>
+  <div class="hearts">💕 💕 💕</div>
+  <button class="close-btn" onclick="document.getElementById('yes-msg').classList.remove('show')">Cerrar ✕</button>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-tag">Para ti, con todo mi corazón</p>
+  <h1 class="hero-title">
+    Extraño tener<em>te a mi lado.</em>
+  </h1>
+  <p class="hero-subtitle">
+    Hay cosas que se aprenden perdiéndolas. Y perderte a ti fue la lección más dura de mi vida.
+  </p>
+  <div class="hero-heart">🌹</div>
+  <p class="scroll-hint">Sigue leyendo ↓</p>
+</section>
+
+<!-- PROMISES -->
+<section class="promises">
+  <p class="section-label">Mis promesas</p>
+  <h2 class="section-title">Esto te juro desde el alma</h2>
+  <div class="cards">
+
+    <div class="card" data-delay="0">
+      <span class="card-icon">🤝</span>
+      <span class="card-number">01</span>
+      <p class="card-promise">Prometo esforzarme cada día</p>
+      <p class="card-desc">No solo cuando sea fácil. Voy a trabajar en lo nuestro con constancia, incluso los días difíciles.</p>
+    </div>
+
+    <div class="card" data-delay="100">
+      <span class="card-icon">👂</span>
+      <span class="card-number">02</span>
+      <p class="card-promise">Prometo comprenderte</p>
+      <p class="card-desc">Escucharte de verdad, sin juzgar, sin apresurarme. Quiero entender tu mundo tal como es.</p>
+    </div>
+
+    <div class="card" data-delay="200">
+      <span class="card-icon">💬</span>
+      <span class="card-number">03</span>
+      <p class="card-promise">Prometo comunicarme mejor</p>
+      <p class="card-desc">Nada de silencio cuando deba hablar. Voy a elegir las palabras con cuidado y con amor.</p>
+    </div>
+
+    <div class="card" data-delay="300">
+      <span class="card-icon">🌱</span>
+      <span class="card-number">04</span>
+      <p class="card-promise">Prometo crecer contigo</p>
+      <p class="card-desc">No quiero ser quien era antes. Quiero ser mejor persona, y quiero hacerlo a tu lado.</p>
+    </div>
+
+    <div class="card" data-delay="400">
+      <span class="card-icon">🛡️</span>
+      <span class="card-number">05</span>
+      <p class="card-promise">Prometo cuidarte siempre</p>
+      <p class="card-desc">Tu bienestar importa más que tener la razón. Te elegiré en cada decisión que tome.</p>
+    </div>
+
+    <div class="card" data-delay="500">
+      <span class="card-icon">✨</span>
+      <span class="card-number">06</span>
+      <p class="card-promise">Prometo valorarte como mereces</p>
+      <p class="card-desc">Nunca más daré por sentado lo que eres. Eres única y quiero que lo sientas todos los días.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider">— ♥ —</div>
+
+<!-- LETTER -->
+<section class="letter-section">
+  <p class="section-label">Desde mi corazón</p>
+  <div class="letter-wrap">
+    <h3 class="letter-title">Una carta para ti</h3>
+    <div class="letter-body">
+      <p>He pensado mucho en todo lo que pasó, y hay algo que me quedó muy claro: hay personas que entran a tu vida y la hacen diferente en todo sentido. Tú eres esa persona para mí.</p>
+      <p>Sé que cometí errores. Sé que hubo momentos en que no estuve al nivel que merecías. Pero también sé que nadie me conoce como tú, y que lo que vivimos juntos valió la pena.</p>
+      <p>No te pido que olvides. Te pido que me des la oportunidad de demostrar que aprendí. Que crecí. Que te extraño de una manera que no sabía que era posible extrañar a alguien.</p>
+      <p>Si quisieras volver, lo haría bien esta vez. Con paciencia, con detalles, con conversaciones reales y con el amor que siempre te tuve, pero mejor administrado.</p>
+    </div>
+    <p class="letter-sig">Con todo lo que soy, siempre tuyo/a 🌹</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="cta-title">¿Me das una<br><span>segunda oportunidad?</span></h2>
+  <p class="cta-sub">No te pido que sea perfecto. Solo te pido que lo intentemos, con honestidad y con el corazón abierto.</p>
+  <div class="btn-group">
+    <button class="btn btn-yes" onclick="document.getElementById('yes-msg').classList.add('show')">
+      Sí, quiero intentarlo 💕
+    </button>
+    <button class="btn btn-no" id="noBtn">
+      Necesito pensarlo...
+    </button>
+  </div>
+</section>
+
+<script>
+  // ─── Petals
+  const container = document.getElementById('petals');
+  const symbols = ['🌸','🌺','🌹','💮','🌷'];
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (6 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.fontSize = (1 + Math.random() * 1.2) + 'rem';
+    container.appendChild(p);
+  }
+
+  // ─── Card reveal on scroll
+  const cards = document.querySelectorAll('.card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const delay = e.target.dataset.delay || 0;
+        setTimeout(() => e.target.classList.add('visible'), parseInt(delay));
+      }
+    });
+  }, { threshold: 0.15 });
+  cards.forEach(c => observer.observe(c));
+
+  // ─── "No" button runs away
+  const noBtn = document.getElementById('noBtn');
+  let noMoves = 0;
+  noBtn.addEventListener('mouseover', () => {
+    if (noMoves >= 4) { noBtn.textContent = 'Está bien... 😢'; return; }
+    const maxX = window.innerWidth - noBtn.offsetWidth - 40;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 40;
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = Math.max(20, Math.random() * maxX) + 'px';
+    noBtn.style.top  = Math.max(20, Math.random() * maxY) + 'px';
+    noMoves++;
+  });
+</script>
+</body>
+</html>
